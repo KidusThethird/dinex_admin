@@ -1,4 +1,7 @@
-import { Calendar, Home, Inbox, Search, Settings , CircleUser } from "lucide-react"
+"use client"; // Required for `usePathname`
+
+import { usePathname } from "next/navigation";
+import { Calendar, Home, Inbox, Search, Settings, CircleUser } from "lucide-react";
 
 import {
   Sidebar,
@@ -9,25 +12,19 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-  } from "@/components/ui/accordion"
-  
+} from "@/components/ui/sidebar";
+import Image from "next/image";
 
 // Menu items.
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/home",
     icon: Home,
   },
   {
     title: "Inbox",
-    url: "#",
+    url: "/inbox",
     icon: Inbox,
   },
   {
@@ -37,43 +34,69 @@ const items = [
   },
   {
     title: "Calendar",
-    url: "#",
+    url: "/calendar",
     icon: Calendar,
   },
   {
     title: "Search",
-    url: "#",
+    url: "/search",
     icon: Search,
   },
   {
     title: "Settings",
-    url: "#",
+    url: "/settings",
     icon: Settings,
   },
-]
+];
 
 export function AppSidebar() {
+  const pathname = usePathname(); // Get the current path
+
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          {/* Logo Section */}
+          <div className="flex items-center m-4">
+            <Image
+              src="/logo/Untitled.jpg" // Path relative to the public directory
+              alt="Company Logo"
+              width={70} // Adjust width
+              height={90} // Adjust height
+              className="bg-gray-400 rounded" // Optional styling
+            />
+          </div>
+
+          <SidebarGroupLabel>DineX Admin Dashboard</SidebarGroupLabel>
+
+          {/* Sidebar Menu */}
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {items.map((item) => {
+                // Check if the current route starts with the menu item's URL
+                const isActive = pathname.startsWith(item.url);
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <a
+                        href={item.url}
+                        className={`flex items-center space-x-2 px-4 py-2 rounded-md ${
+                          isActive
+                            ? "bg-primaryColor text-white" // Active styles
+                            : "text-gray-700 hover:bg-gray-100" // Default styles
+                        }`}
+                      >
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }
