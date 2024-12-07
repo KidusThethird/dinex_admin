@@ -1,0 +1,139 @@
+"use client";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+
+
+// import useRefetchPackageStore from "../store/refetchPackageDetails";
+// import { setAccessToken, getAccessToken, clearAccessToken } from "../lib/tokenManager";
+
+import { Toaster } from "@/components/ui/sonner"
+import { toast } from "sonner";
+import { apiUrl } from "@/apiConfig";
+interface EditDialogProps {
+  type: string;
+  id: number;
+  field: string;
+  content: string;
+  dataType: string;
+}
+
+export default function EditCellDialog({
+  type,
+  id,
+  field,
+  content,
+  dataType,
+}: EditDialogProps) {
+ // const accessToken = getAccessToken();
+
+  const RecivedType = type;
+  const RecivedId = id;
+  const RecivedField = field;
+  const RecivedContent = content;
+  const DataType = dataType;
+
+  const [editedValue, setEditedValue] = useState("");
+  const [open, setOpen] = useState(false);
+
+ 
+  let temporaryIndex = 0;
+  const handleInputChange = (event: any) => {
+    setEditedValue(event.target.value);
+  };
+
+  const updatedData = {
+    [RecivedField.toString()]: editedValue,
+  };
+
+  const router = useRouter();
+  const handleUpdate = async () => {
+    try {
+      console.log("printed");
+      const response = await fetch(`${apiUrl}/${RecivedType}/${RecivedId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        //  Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify(updatedData),
+       // credentials: "include",
+
+        // Add any necessary headers or authentication tokens
+      });
+
+      if (response.ok) {
+        // File successfully deleted
+        console.log("File Updated");
+        //router.push("/" + RecivedId);
+        router.push(window.location.href);
+        setOpen(false);
+        router.refresh();
+        toast("Section Edited.")
+
+      
+      } else {
+        // File deletion failed
+        console.error("Failed to Update file");
+      }
+    } catch (error) {
+      console.error("Error Updating file", error);
+    }
+  };
+
+  return (
+    <div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <button className="px-1  text-white bg-primaryColor rounded">
+            Edit
+          </button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit from {RecivedType}</DialogTitle>
+            <DialogDescription>
+              Make changes here. Click save when you&apos;re done.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-4 py-4">
+            <div className="   items-center gap-4">
+              <Label htmlFor="name" className="text-right"></Label>
+              <Input
+                id={RecivedField}
+                defaultValue={RecivedContent}
+                className=""
+                type={dataType}
+                onChange={handleInputChange}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              className="bg-primaryColor text-white"
+              type="submit"
+              onClick={() => handleUpdate()}
+            >
+              Save changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

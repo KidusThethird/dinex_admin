@@ -1,7 +1,7 @@
 "use client"; // Required for `usePathname`
 
 import { usePathname } from "next/navigation";
-import { Calendar, Home, Inbox, Search, Settings, CircleUser } from "lucide-react";
+import { Calendar, Home, Inbox, Search, Settings, CircleUser , UtensilsCrossed , Wine} from "lucide-react";
 
 import {
   Sidebar,
@@ -33,14 +33,14 @@ const items = [
     icon: CircleUser,
   },
   {
-    title: "Calendar",
-    url: "/calendar",
-    icon: Calendar,
+    title: "Foods",
+    url: "/foods",
+    icon: UtensilsCrossed,
   },
   {
-    title: "Search",
-    url: "/search",
-    icon: Search,
+    title: "Drinks",
+    url: "/drinks",
+    icon: Wine,
   },
   {
     title: "Settings",

@@ -21,113 +21,113 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { apiUrl } from "@/apiConfig";
 import { toast } from "sonner";
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-  } from "@/components/ui/breadcrumb"
-
-  
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { useRouter } from "next/navigation"; 
 
 // Define schema for form validation
-const waiterSchema = z.object({
-  firstName: z.string().min(1, "First Name is required"),
-  lastName: z.string().min(1, "Last Name is required"),
-  email: z.string().email("Invalid email").min(1, "Email is required"),
-  phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
-  type: z.enum(["Full-time", "Part-time"], {
+const foodSchema = z.object({
+    itemType: z.string(),
+  name: z.string().min(1, "Food name is required"),
+
+  description: z.string().min(1, "Description is required"),
+  type: z.enum(["soft_drink","water","juice","hot_beverage","smoothies","milk","mocktails","alchol","others"], {
     required_error: "Type is required",
   }),
-  status: z.enum(["up", "down"], {
+  price: z.coerce
+    .number({
+      invalid_type_error: "Price must be a number",
+    })
+    .positive("Price must be greater than zero"),
+  duration: z.coerce
+    .number({
+      invalid_type_error: "Duration must be a number",
+    })
+    .positive("Duration must be greater than zero"),
+  status: z.enum(["Available", "Unavailable"], {
     required_error: "Status is required",
   }),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string().min(6, "Confirm Password must be at least 6 characters"),
-}).refine(data => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
 });
 
 // TypeScript type for the form data
-type WaiterFormValues = z.infer<typeof waiterSchema>;
+type FoodFormValues = z.infer<typeof foodSchema>;
 
-export default function WaitersForm() {
+export default function FoodForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const form = useForm<WaiterFormValues>({
-    resolver: zodResolver(waiterSchema),
+  const router = useRouter(); 
+  const form = useForm<FoodFormValues>({
+    resolver: zodResolver(foodSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
-      type: "Full-time",
-      status: "down",
-      password: "",
-      confirmPassword: "",
+      name: "",
+      description: "",
+      type: "others",
+      price: 0,
+      duration: 0,
+      status: "Available",
+      itemType :"drink"
     },
   });
 
   // Handle form submission
-  const onSubmit = async (data: WaiterFormValues) => {
+  const onSubmit = async (data: FoodFormValues) => {
     setIsSubmitting(true);
     try {
-      // Remove confirmPassword from data before sending it to the backend
-      const { confirmPassword, ...dataToSend } = data;
-
-      const response = await axios.post(`${apiUrl}/waiters`, dataToSend); // Adjust the endpoint as per your API route
+      const response = await axios.post(`${apiUrl}/items`, data); // Use the /foods endpoint
 
       // Check if the response contains the failure message
       if (response.data.message === "failed") {
-        toast("Failed to add waiter");
+        toast("Failed to add food");
         setIsSubmitting(false);
         return; // Stop further processing if the response indicates failure
       }
 
-      toast("Waiter Account Successfully Created!");
-
+      toast("Food Successfully Added!");
+      router.push('/foods');
       form.reset();
     } catch (error) {
       console.error(error);
-      toast("An error occurred while adding the waiter");
+      toast("An error occurred while adding the food");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-4xl  mt-10 m-14">
-        <div className="py-4">
+    <div className="max-w-4xl mt-10 m-14">
+      <div className="py-4">
         <Breadcrumb>
-  <BreadcrumbList>
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/home">Home</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/waiters">Waiters</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbPage>Add a Waiter</BreadcrumbPage>
-    </BreadcrumbItem>
-  </BreadcrumbList>
-</Breadcrumb>
-</div>
-      <h1 className="text-xl font-bold mb-6">Add New Waiter</h1>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/home">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/drinks">Drinks</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Add a Drink</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
+      <h1 className="text-xl font-bold mb-6">Add New Drink</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <FormField
               control={form.control}
-              name="firstName"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>First Name</FormLabel>
+                  <FormLabel>Drink Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter first name" {...field} />
+                    <Input placeholder="Enter drink name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -135,12 +135,12 @@ export default function WaitersForm() {
             />
             <FormField
               control={form.control}
-              name="lastName"
+              name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Last Name</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter last name" {...field} />
+                    <Input placeholder="Enter drink description" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -148,12 +148,12 @@ export default function WaitersForm() {
             />
             <FormField
               control={form.control}
-              name="email"
+              name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Price</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="Enter email" {...field} />
+                    <Input type="number" placeholder="Enter price" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -161,12 +161,12 @@ export default function WaitersForm() {
             />
             <FormField
               control={form.control}
-              name="phoneNumber"
+              name="duration"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>Preparation Duration (minutes)</FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder="Enter phone number" {...field} />
+                    <Input type="number" placeholder="Enter duration in minutes" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -175,32 +175,6 @@ export default function WaitersForm() {
           </div>
 
           <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="Enter password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="Confirm password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="type"
@@ -215,8 +189,15 @@ export default function WaitersForm() {
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Full-time">Full-time</SelectItem>
-                      <SelectItem value="Part-time">Part-time</SelectItem>
+                      <SelectItem value="soft_drink">Soft Drink</SelectItem>
+                      <SelectItem value="water">Water</SelectItem>
+                      <SelectItem value="juice">Juice</SelectItem>
+                      <SelectItem value="hot_beverage">Hot Beverage</SelectItem>
+                      <SelectItem value="smoothies">Smoothies</SelectItem>
+                      <SelectItem value="milk">Milk Producs</SelectItem>
+                      <SelectItem value="mocktails ">Mocktails </SelectItem>
+                      <SelectItem value="alchol">Alcoholic Beverage</SelectItem>
+                      <SelectItem value="others">Others</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -237,8 +218,8 @@ export default function WaitersForm() {
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="up">Up</SelectItem>
-                      <SelectItem value="down">Down</SelectItem>
+                      <SelectItem value="Available">Available</SelectItem>
+                      <SelectItem value="Unavailable">Unavailable</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -246,7 +227,7 @@ export default function WaitersForm() {
               )}
             />
             <Button className="bg-primaryColor" type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Add Waiter"}
+              {isSubmitting ? "Submitting..." : "Add Drink"}
             </Button>
           </div>
         </form>

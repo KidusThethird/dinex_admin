@@ -11,7 +11,7 @@ import DataTableGenerator from "@/main_components/data-table";
 
 
 
-export default function WaitersTable() {
+export default function FoodsTable() {
   const [data, setData] = useState([]);
  
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function WaitersTable() {
         }
 
         // Make the request
-       const response = await axios.get(`${apiUrl}/waiters`, {
+       const response = await axios.get(`${apiUrl}/items/getdrinks`, {
    // const response = await axios.get(`https://api.fayidaacademy.com/city`, {  
   headers: {
             "Content-Type": "application/json",
@@ -50,13 +50,13 @@ export default function WaitersTable() {
     <div className="w-full ">
     <div className="mx-3  w-full ">
       <h1 className="text-lg text-primaryColor underline font-semibold my-8">
-        Waiters List
+        Drinks List
       </h1>
       <DataTableGenerator
         columns={columns}
         data={data}
-        filterBy="firstName"
-        type="waiter"
+        filterBy="name"
+        type="item"
       />
     </div>
     </div>

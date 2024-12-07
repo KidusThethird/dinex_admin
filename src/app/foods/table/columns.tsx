@@ -53,7 +53,7 @@ export const columns: ColumnDef<Student>[] = [
                   }}
                 >
                   <User className="mr-2 h-4 w-4" />
-                  <Link href={`/waiters/${WaiterId}`}>Details</Link>
+                  <Link href={`/foods/${WaiterId}`}>Details</Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
@@ -74,70 +74,15 @@ export const columns: ColumnDef<Student>[] = [
         >
           {" "}
           <div className="flex space-x-1">
-            First Name
+            Name
             <ArrowUpDown size={16} />
           </div>
         </button>
       );
     },
-    accessorKey: "firstName",
+    accessorKey: "name",
   },
 
-  {
-    header: ({ column }) => {
-      return (
-        <button
-          onClick={() => {
-            column.toggleSorting(column.getIsSorted() == "asc");
-          }}
-        >
-          {" "}
-          <div className="flex space-x-1">
-            Last Name
-            <ArrowUpDown size={16} />
-          </div>
-        </button>
-      );
-    },
-    accessorKey: "lastName",
-  },
-
-  {
-    header: ({ column }) => {
-      return (
-        <button
-          onClick={() => {
-            column.toggleSorting(column.getIsSorted() == "asc");
-          }}
-        >
-          {" "}
-          <div className="flex space-x-1">
-            Email
-            <ArrowUpDown size={16} />
-          </div>
-        </button>
-      );
-    },
-    accessorKey: "email",
-  },
-  {
-    header: ({ column }) => {
-      return (
-        <button
-          onClick={() => {
-            column.toggleSorting(column.getIsSorted() == "asc");
-          }}
-        >
-          {" "}
-          <div className="flex space-x-1">
-            PhoneNumber
-            <ArrowUpDown size={16} />
-          </div>
-        </button>
-      );
-    },
-    accessorKey: "phoneNumber",
-  },
   {
     header: ({ column }) => {
       return (
@@ -155,6 +100,28 @@ export const columns: ColumnDef<Student>[] = [
       );
     },
     accessorKey: "type",
+  },
+
+  {
+    header: ({ column }) => {
+      return (
+        <button
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() == "asc");
+          }}
+        >
+          <div className="flex space-x-1">
+            Price
+            <ArrowUpDown size={16} />
+          </div>
+        </button>
+      );
+    },
+    accessorKey: "price",
+    cell: ({ row }) => {
+      const price = String(row.getValue("price")); // Access the 'price' value
+      return <span>{price} Birr</span>; // Add "USD" or any other text
+    },
   },
   {
     header: ({ column }) => {
@@ -174,6 +141,7 @@ export const columns: ColumnDef<Student>[] = [
     },
     accessorKey: "status",
   },
+  
 
  
 ];

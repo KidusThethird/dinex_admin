@@ -7,7 +7,8 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
   } from "@/components/ui/breadcrumb"
-import WaitersTable from './table/page'
+import FoodsTable from './table/page'
+//import WaitersTable from './table/page'
 
   
 export default function Waiters() {
@@ -22,16 +23,16 @@ export default function Waiters() {
     
    
     <BreadcrumbItem>
-      <BreadcrumbPage>Waiters</BreadcrumbPage>
+      <BreadcrumbPage>Drinks</BreadcrumbPage>
     </BreadcrumbItem>
   </BreadcrumbList>
 </Breadcrumb>
 </div>
-    <a href="/waiters/create_waiter" className='bg-primaryColor text-white p-1 rounded '>Create a new waiter</a>
+    <a href="/drinks/create_drink" className='bg-primaryColor text-white p-1 rounded '>Create a new Drink Item</a>
    
    <div className='w-full '>
 
-    <WaitersTable />
+<FoodsTable />
    </div>
    
     </div>

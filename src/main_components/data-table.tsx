@@ -23,17 +23,6 @@ import {
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-// import { downloadPackagesToExcel } from "@/lib/export_excel/package_export";
-// import { downloadCoursesToExcel } from "@/lib/export_excel/courses_export";
-// import { downloadStudentsToExcel } from "@/lib/export_excel/students_export";
-// import { downloadSectionsToExcel } from "@/lib/export_excel/sections_exports";
-// import { downloadPurchasesToExcel } from "@/lib/export_excel/purchase_exports";
-// import { downloadLanguagesToExcel } from "@/lib/export_excel/languages_export";
-// import { downloadBlogsToExcel } from "@/lib/export_excel/blogs_exprot";
-// import { downloadPaymentMethodsToExcel } from "@/lib/export_excel/payment_method_exports";
-// import { downloadPrizesToExcel } from "@/lib/export_excel/prizes_export";
-// import { downloadLeaderBoardToExcel } from "@/lib/export_excel/leaderboard_export";
-// import { downloadPrizeOrderToExcel } from "@/lib/export_excel/prize_order_export";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -50,12 +39,14 @@ export function DataTableGenerator<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  var filterBytoDisplay = "";
-  // console.log("type:" + type);
+  let filterBytoDisplay = "";
 
   switch (type) {
     case "waiter":
       filterBytoDisplay = "First Name";
+      break;
+      case "item":
+      filterBytoDisplay = "Name";
       break;
     case "package":
       filterBytoDisplay = "Package Name";
@@ -87,34 +78,11 @@ export function DataTableGenerator<TData, TValue>({
     case "prizeOrders":
       filterBytoDisplay = "First Name";
       break;
-
     default:
-    //  filterBytoDisplay = "";
   }
+
   const exportManage = (filterBy: any) => {
-    // if (type == "package") {
-    //   downloadPackagesToExcel();
-    // } else if (type == "course") {
-    //   downloadCoursesToExcel();
-    // } else if (type == "student") {
-    //   downloadStudentsToExcel();
-    // } else if (type == "section") {
-    //   downloadSectionsToExcel();
-    // } else if (type == "purchase") {
-    //   downloadPurchasesToExcel();
-    // } else if (type == "language") {
-    //   downloadLanguagesToExcel();
-    // } else if (type == "blog") {
-    //   downloadBlogsToExcel();
-    // } else if (type == "paymentMethod") {
-    //   downloadPaymentMethodsToExcel();
-    // } else if (type == "prize") {
-    //   downloadPrizesToExcel();
-    // } else if (type == "leaderboard") {
-    //   downloadLeaderBoardToExcel();
-    // } else if (type == "prizeOrders") {
-    //   downloadPrizeOrderToExcel();
-    // }
+    // Export logic can be implemented here
   };
 
   const table = useReactTable({
@@ -124,7 +92,6 @@ export function DataTableGenerator<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     state: {
@@ -134,14 +101,16 @@ export function DataTableGenerator<TData, TValue>({
   });
 
   return (
-    <div className="">
-      <div className="flex justify-around  my-10 ">
-        <div className="flex gap-6">
-          <h1>Search: </h1>
+    <div className="p-4 ">
+      <div className="flex justify-between items-center my-6 mb-6">
+        <div className="flex items-center gap-4">
+          <label htmlFor="search" className="font-medium">
+            Search:
+          </label>
           <input
+            id="search"
             type="text"
-            className="border-b-2 border-primaryColor"
-            //`Filter by ${filterBy}`
+            className="border rounded-md p-2 focus:outline-none focus:ring focus:ring-primaryColor"
             placeholder={`Filter by ${filterBytoDisplay}`}
             value={
               (table.getColumn(`${filterBy}`)?.getFilterValue() as string) || ""
@@ -151,47 +120,37 @@ export function DataTableGenerator<TData, TValue>({
             }}
           />
         </div>
-        <div>
-          <button onClick={() => exportManage(filterBy)}>
-            <h1 className="bg-primaryColor text-white px-1 rounded hover:bg-green-600">
-              {" "}
-              Export to Excel
-            </h1>
-          </button>
-        </div>
+        <Button onClick={() => exportManage(filterBy)} className="bg-primaryColor">
+          Export to Excel
+        </Button>
       </div>
 
-      <div className="rounded-md border">
-        <Table className="">
-          <TableHeader className="border-b-4 ">
-
-            {table.getHeaderGroups().map((headerGroup) => {
-              return (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id} className="text-primaryColor">
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
+      <div className="overflow-x-auto rounded-md border shadow">
+        <Table className="min-w-full table-auto  ">
+          <TableHeader className="bg-gray-400 ">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id} className="text-white p-4 ">
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
           </TableHeader>
-
-          <TableBody>
+          <TableBody className="">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
+                  className="hover:bg-gray-50 transition-colors "
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="p-4 ">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -204,9 +163,9 @@ export function DataTableGenerator<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center text-gray-500"
                 >
-                  <div className="text-red-500 text-lg">No Result Found</div>
+                  No Results Found
                 </TableCell>
               </TableRow>
             )}
@@ -214,41 +173,30 @@ export function DataTableGenerator<TData, TValue>({
         </Table>
       </div>
 
-      {table.getPageCount() != 1 && (
-        <div className="flex space-x-4 m-6">
-          <div>
-            <Button
-              onClick={() => {
-                table.previousPage();
-              }}
-              disabled={!table.getCanPreviousPage()}
-              className="bg-primaryColor"
-            >
-              {" "}
-              Prev
-            </Button>
-          </div>
-
-          <div>
-            <Button
-              onClick={() => {
-                table.nextPage();
-              }}
-              disabled={!table.getCanNextPage()}
-              className="bg-primaryColor"
-            >
-              Next
-            </Button>
-          </div>
-          <div className="space-x-3">
-            <h1>
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </h1>
-          </div>
+      {table.getPageCount() > 1 && (
+        <div className="flex justify-between items-center mt-4">
+          <Button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className="bg-primaryColor"
+          >
+            Prev
+          </Button>
+          <span className="text-sm">
+            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </span>
+          <Button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            className="bg-primaryColor"
+          >
+            Next
+          </Button>
         </div>
       )}
     </div>
   );
 }
+
 export default DataTableGenerator;
