@@ -196,43 +196,43 @@ export default function Statstics() {
       <div className="mb-6">
         <button
           onClick={() => handleTimePeriodChange('last24')}
-          className={`mr-4 p-2 ${timePeriod === 'last24' ? 'bg-primaryColor text-white' : 'bg-gray-200'}`}
+          className={`mr-4 p-2 ${timePeriod === 'last24' ? 'bg-primaryColor text-white rounded' : 'bg-gray-200 rounded'}`}
         >
           Last 24 hours
         </button>
         <button
           onClick={() => handleTimePeriodChange('thisWeek')}
-          className={`mr-4 p-2 ${timePeriod === 'thisWeek' ? 'bg-primaryColor text-white' : 'bg-gray-200'}`}
+          className={`mr-4 p-2 ${timePeriod === 'thisWeek' ? 'bg-primaryColor text-white rounded' : 'bg-gray-200 rounded'}`}
         >
           This Week
         </button>
         <button
           onClick={() => handleTimePeriodChange('thisMonth')}
-          className={`mr-4 p-2 ${timePeriod === 'thisMonth' ? 'bg-primaryColor text-white' : 'bg-gray-200'}`}
+          className={`mr-4 p-2 ${timePeriod === 'thisMonth' ? 'bg-primaryColor text-white rounded' : 'bg-gray-200 rounded'}`}
         >
           This Month
         </button>
         <button
           onClick={() => handleTimePeriodChange('last3Months')}
-          className={`mr-4 p-2 ${timePeriod === 'last3Months' ? 'bg-primaryColor text-white' : 'bg-gray-200'}`}
+          className={`mr-4 p-2 ${timePeriod === 'last3Months' ? 'bg-primaryColor text-white rounded' : 'bg-gray-200 rounded'}`}
         >
           Last 3 Months
         </button>
         <button
           onClick={() => handleTimePeriodChange('last6Months')}
-          className={`mr-4 p-2 ${timePeriod === 'last6Months' ? 'bg-primaryColor text-white' : 'bg-gray-200'}`}
+          className={`mr-4 p-2 ${timePeriod === 'last6Months' ? 'bg-primaryColor text-white rounded' : 'bg-gray-200 rounded'}`}
         >
           Last 6 Months
         </button>
         <button
           onClick={() => handleTimePeriodChange('lastYear')}
-          className={`mr-4 p-2 ${timePeriod === 'lastYear' ? 'bg-primaryColor text-white' : 'bg-gray-200'}`}
+          className={`mr-4 p-2 ${timePeriod === 'lastYear' ? 'bg-primaryColor text-white rounded' : 'bg-gray-200 rounded'}`}
         >
           Last Year
         </button>
         <button
           onClick={() => handleTimePeriodChange('allTime')}
-          className={`mr-4 p-2 ${timePeriod === 'allTime' ? 'bg-primaryColor text-white' : 'bg-gray-200'}`}
+          className={`mr-4 p-2 ${timePeriod === 'allTime' ? 'bg-primaryColor text-white rounded' : 'bg-gray-200 rounded'}`}
         >
           All Time
         </button>
