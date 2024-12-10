@@ -192,7 +192,7 @@ export default function FoodForm() {
                       <SelectItem value="Starter">Starter</SelectItem>
                       <SelectItem value="Main Course">Main Course</SelectItem>
                       <SelectItem value="Dessert">Dessert</SelectItem>
-                      <SelectItem value="Drink">Drink</SelectItem>
+                      <SelectItem value="Drink">Other</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

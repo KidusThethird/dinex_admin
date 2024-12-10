@@ -87,7 +87,7 @@ export default function FoodForm() {
       }
 
       toast("Food Successfully Added!");
-      router.push('/foods');
+      router.push('/drinks');
       form.reset();
     } catch (error) {
       console.error(error);

@@ -1,7 +1,7 @@
 "use client"; // Required for `usePathname`
 
 import { usePathname } from "next/navigation";
-import { Calendar, Home, Inbox, Search, Settings, CircleUser , UtensilsCrossed , Wine} from "lucide-react";
+import { Calendar, Home, History, ChartNoAxesCombined, Settings, CircleUser , UtensilsCrossed , Wine, Landmark } from "lucide-react";
 
 import {
   Sidebar,
@@ -23,9 +23,9 @@ const items = [
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "/inbox",
-    icon: Inbox,
+    title: "Statstics",
+    url: "/finance_statstics",
+    icon: ChartNoAxesCombined,
   },
   {
     title: "Waiters",
@@ -41,6 +41,16 @@ const items = [
     title: "Drinks",
     url: "/drinks",
     icon: Wine,
+  },
+  {
+    title: "Order History",
+    url: "/history",
+    icon: History,
+  },
+  {
+    title: "Finance Table",
+    url: "/finance_table",
+    icon: Landmark,
   },
   {
     title: "Settings",
